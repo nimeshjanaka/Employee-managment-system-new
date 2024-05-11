@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Between } from 'typeorm';
 import { Attendance } from './entity/attenance.entity';
 import { CreateAttendanceDto } from './dto/attendance.dto';
+import { format, startOfDay, endOfDay } from 'date-fns';
 import { User } from 'src/user/entity/user.entity';
 import {
   IPaginationOptions,
@@ -12,7 +13,6 @@ import {
 
 @Injectable()
 export class AttendanceService {
- 
   constructor(
     @InjectRepository(Attendance)
     private readonly attendanceRepository: Repository<Attendance>,
@@ -44,8 +44,8 @@ export class AttendanceService {
 
   async findAllByUser(user: User, options: IPaginationOptions) {
     return paginate<Attendance>(this.attendanceRepository, options, {
-      where:{
-        user:{
+      where: {
+        user: {
           id: user.id,
         },
       },
@@ -71,12 +71,12 @@ export class AttendanceService {
 
   async findCurrentAttendance(user: User) {
     const result = await this.attendanceRepository.findOne({
-      where:{
-        outTime:"",
-        user:{
-          id:user.id,
-        }
-      }
+      where: {
+        outTime: '',
+        user: {
+          id: user.id,
+        },
+      },
     });
 
     return result;
@@ -102,5 +102,28 @@ export class AttendanceService {
     }
 
     return result;
+  }
+
+  async getTodaysAttendanceCount(): Promise<number> {
+    const todayStart = format(startOfDay(new Date()), 'yyyy-MM-dd');
+    const todayEnd = format(endOfDay(new Date()), 'yyyy-MM-dd');
+
+    return this.attendanceRepository.count({
+      where: {
+        date: Between(todayStart, todayEnd),
+      },
+    });
+  }
+
+  async getTodaysAttendanceDetails(): Promise<Attendance[]> {
+    const todayStart = format(startOfDay(new Date()), 'yyyy-MM-dd');
+    const todayEnd = format(endOfDay(new Date()), 'yyyy-MM-dd');
+
+    return this.attendanceRepository.find({
+      where: {
+        date: Between(todayStart, todayEnd),
+      },
+      relations: ['user'],
+    });
   }
 }

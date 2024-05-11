@@ -106,7 +106,7 @@ export class AttendanceController {
     @GetUser() user: User,
   ): Promise<Attendance[]> {
     try {
-      const result = await this.attendanceService.findAllByUser(user,{
+      const result = await this.attendanceService.findAllByUser(user, {
         page,
         limit,
         route: '/',
@@ -191,6 +191,9 @@ export class AttendanceController {
     }
   }
 
+
+
+
   @Patch(':id')
   async updateAttendance(
     @Res() response,
@@ -226,3 +229,4 @@ export class AttendanceController {
     }
   }
 }
+

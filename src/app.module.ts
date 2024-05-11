@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.modules';
 import { AttendanceModule } from './attendance/attendance.module';
 import { LeaveRequestModule } from './leave-request/leave-request.module';
+import { MailerModule } from './mailer/mailer.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { LeaveRequestModule } from './leave-request/leave-request.module';
     AuthModule,
     CommonModule,
     AttendanceModule,
-    LeaveRequestModule
+    LeaveRequestModule,
+    MailerModule
   ],
   controllers: [AppController],
   providers: [AppService],

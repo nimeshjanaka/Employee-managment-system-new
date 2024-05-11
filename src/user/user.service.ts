@@ -117,6 +117,11 @@ export class UserService implements OnModuleInit {
 
   async findAll(options: IPaginationOptions): Promise<Pagination<User>> {
     return paginate<User>(this.userRepository, options, {
+      where: {
+        role: {
+          role: 'employee',
+        },
+      },
       relations: {
         role: true,
       },

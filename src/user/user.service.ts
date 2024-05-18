@@ -119,7 +119,7 @@ export class UserService implements OnModuleInit {
     return paginate<User>(this.userRepository, options, {
       where: {
         role: {
-          role: 'employee',
+          role: 'Employee',
         },
       },
       relations: {

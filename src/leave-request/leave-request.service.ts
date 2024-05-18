@@ -12,6 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entity/user.entity';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 import { MailerService } from 'src/mailer/mailer.service';
+import { response } from 'express';
 
 @Injectable()
 export class LeaveRequestService {
@@ -24,8 +25,6 @@ export class LeaveRequestService {
   ) {}
 
   async create(user: User, createLeaveRequestDto: CreateLeaveRequestDto) {
-    console.log(createLeaveRequestDto);
-
     const suggestedCoworker = await this.userRepository.findOne({
       where: {
         id: createLeaveRequestDto.SuggestedCoworkerId,
@@ -247,8 +246,12 @@ export class LeaveRequestService {
     }
 
     const coworker = await this.userRepository.findOneBy({
-      id: updateLeaveRequestDto.SuggestedCoworkerId,
+      id:
+        updateLeaveRequestDto.SuggestedCoworkerId ??
+        leaveRequest.SuggestedCoworker.id,
     });
+
+    console.log(coworker);
 
     if (!coworker) {
       throw new NotFoundException('Suggested Coworker Not Found');

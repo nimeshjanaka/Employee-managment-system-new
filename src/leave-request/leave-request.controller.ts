@@ -1,4 +1,3 @@
-import { LeaveRequestStatus } from 'src/common/enum/common.enum';
 import {
   Controller,
   Get,
@@ -24,8 +23,10 @@ import { LeaveRequest } from './entity/leave-request.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/auth/role.guard';
 import { Roles } from 'src/auth/roles.decorator';
+import { LeaveRequestStatus } from 'src/common/enum/common.enum';
 
 @Controller('leave-request')
+@UseGuards(AuthGuard(), RoleGuard)
 export class LeaveRequestController {
   constructor(
     private readonly leaveRequestService: LeaveRequestService,
